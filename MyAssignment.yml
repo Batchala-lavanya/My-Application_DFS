@@ -1,15 +1,15 @@
 spring:
   application:
     name: MyAssignment
-
-  datasource:
+   datasource:
     url: jdbc:h2:mem:taskDatabase;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password: password
 
+    
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     properties:
       hibernate:
@@ -19,12 +19,64 @@ spring:
     console:
       enabled: true
       path: /h2-console
+  
+  batch:
+    jdbc:
+      initialize-schema: always  
+    job:
+      enabled: true 
+      name: userJob
+    
+  main:
+    allow-bean-definition-overriding: true 
 
+  
+  thymeleaf:
+    prefix: classpath:/templates/
+    suffix: .html
+    mode: HTML
+    encoding: UTF-8
+    cache: false # This is useful for development so templates are not cached
+    servlet:
+      content-type: text/html
+  
+  
 management:
   endpoints:
     web:
       exposure:
         include: health
+  endpoint:
+    health:
+      show-details: always
 
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+    format: yaml
+    title: My API
+    description: API documentation for My Application
+    version: OPENAPI_3_0
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html 
+    
+zipkin:
+    base-url: http://localhost:9411/ 
+
+micrometer:
+  tracing:
+    enabled: true  # Enable tracing
+    exporter:
+      zipkin:
+        endpoint: http://localhost:9411  # Zipkin endpoint to send traces
+    sampler:
+      probability: 1.0 
+      
+      
+product-service:
+  url: http://localhost:8089
 server:
   port: 8088
